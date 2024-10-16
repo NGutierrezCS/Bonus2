@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biconnected Component Tree</title>
+    <script src="https://unpkg.com/force-graph"></script>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+        // Load the biconnected tree data
+        fetch('biconnected_tree.json')
+            .then(response => response.json())
+            .then(data => {
+                const nodes = data.nodes;
+                const links = data.links;
+
+                const Graph = ForceGraph()
+                    .nodes(nodes)
+                    .links(links)
+                    .nodeId('id')
+                    .linkSource('source')
+                    .linkTarget('target')
+                    .onNodeClick(node => alert(`Node clicked: ${node.label}`))
+                    .d3Force('charge', -100)
+                    .d3Force('link', d3.forceLink().distance(50))
+                    .d3Force('center', d3.forceCenter());
+
+                const canvas = document.querySelector('canvas');
+                Graph(canvas);
+            });
+    </script>
+</body>
+</html>
